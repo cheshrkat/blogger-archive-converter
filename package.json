@@ -1,0 +1,22 @@
+{
+  "name": "blogger-archive-converter",
+  "version": "0.1.0",
+  "description": "Convert Blogger XML backup to HTML, Markdown and JSON files.",
+  "main": "index.js",
+  "dependencies": {
+    "cheerio": "1.0.0-rc.3",
+    "commander": "2.13.x",
+    "count-files": "2.6.x",
+    "minimist": "1.2.x",
+    "mkdirp": "0.5.x",
+    "rimraf": "2.6.x",
+    "single-line-log": "1.1.x",
+    "xml2json": "0.11.x"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "bloggerconvert": "./index.js"
+  },
+  "author": "Ben Buchanan",
+  "license": "MIT"
+}

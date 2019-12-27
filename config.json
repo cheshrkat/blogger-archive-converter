@@ -1,0 +1,21 @@
+{ 
+
+  "//structure": "Can be 'tree' or 'flat'",
+	"structure": "tree",
+
+  "//encodeImages": "currently not wired up - base64 the images",
+	"encodeImages": false,
+
+  "//imagePath": "src prefix for IMG tags",
+  "imagePath": "../../images/",
+
+  "//imageExclusionUrls": "URL substrings to exclude from download.",
+  "imageExclusionUrls": ["amazon"],
+
+  "//imageUrls": "URL substrings to match against/download images from.",
+	"imageUrls": ["blogspot", "flickr"],
+
+  "//imageRelativeUrl": "http://your.image.domain/",
+  "imageRelativeUrl": "https://weblog-files.200ok.com.au/"
+
+}
