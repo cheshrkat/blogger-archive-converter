@@ -51,11 +51,11 @@ Log in to Blogger, then go to Settings - Other, then choose Back Up Content to d
 
 ### Setup
 
-* Clone or download this repo
-* Ensure NodeJS is installed
+1. Clone or download this repo
+2. Ensure NodeJS is installed
   * If you have [NVM](https://github.com/creationix/nvm) just run `nvm install && nvm use` 
   * Otherwise check the `.nvmrc` file in this repo and [install that version](https://nodejs.org/en/download/)
-* Run `npm install` from the root of the repo
+3. Run `npm install` from the root of the repo
 
 ### Usage
 
