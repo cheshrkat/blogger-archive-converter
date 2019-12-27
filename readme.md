@@ -53,8 +53,8 @@ Log in to Blogger, then go to Settings - Other, then choose Back Up Content to d
 
 1. Clone or download this repo
 2. Ensure NodeJS is installed
-  * If you have [NVM](https://github.com/creationix/nvm) just run `nvm install && nvm use` 
-  * Otherwise check the `.nvmrc` file in this repo and [install that version](https://nodejs.org/en/download/)
+    1. If you have [NVM](https://github.com/creationix/nvm) just run `nvm install && nvm use` 
+    1. Otherwise check the `.nvmrc` file in this repo and [install that version](https://nodejs.org/en/download/)
 3. Run `npm install` from the root of the repo
 
 ### Usage
@@ -180,7 +180,7 @@ You can modify the HTML/contents of posts using [Cheerio](https://cheerio.js.org
 
 Comments are included in the output as raw HTML, with a heading at the top noting how many comments and a note at the end that comments are closed. To generate without comments or modify any of these specifics, just remove them from the templates and run the conversion again.
 
-If you need more-complex comment conversion, you will need to take care of that yourself - it's beyond the scope of this conversion tool.
+If you need more-complex comment conversion, you will need to take care of that yourself - or perhaps raise a pull request :) I didn't need it so I didn't do it.
 
 ## Troubleshooting
 
@@ -200,3 +200,4 @@ But don't be waiting for it to happen, if you need them right away DIY or submit
 
 - create option to base64 encode all images
 - add an index file for the HTML export
+- harden the image downloader with retries etc
