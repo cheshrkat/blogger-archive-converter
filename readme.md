@@ -45,6 +45,10 @@ wget --limit-rate=200k --no-clobber --convert-links --random-wait -r -p -E -e ro
 
 You will need to use a bash terminal like OSX Terminal or WSL on Windows 10. This will not work in anything else as it calls out to `curl`.
 
+### Export your blog to XML
+
+Log in to Blogger, then go to Settings - Other, then choose Back Up Content to download the XML file. You can also use Google Takeout to export your Blog in ATOM format. This tool should be able to read both, although it has mostly been tested with content exported from the Blogger web UI (not Takeout).
+
 ### Setup
 
 * Clone or download this repo
