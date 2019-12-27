@@ -1,3 +1,5 @@
+[![Known Vulnerabilities](https://snyk.io/test/github/cheshrkat/blogger-archive-converter/badge.svg?targetFile=package.json)](https://snyk.io/test/github/cheshrkat/blogger-archive-converter?targetFile=package.json)
+
 # Blogger Archive Converter
 
 Processes Blogger archive XML files into HTML, Markdown and JSON files. Meaning you can convert...
@@ -19,6 +21,8 @@ It also...
 ## Intended use cases
 
 This tool will help you migrate content from Blogger to a new solution. It is not a drop-in solution for any specific blog tool, the idea is to generate source files you can copy and paste into your new blog project.
+
+Be aware this is a pretty rough conversion so you must inspect the output yourself before you rely on it. The project has been hacked together in holiday breaks, has no tests and generally... use at your own risk ;)
 
 I expect most people will want to customise:
 
@@ -51,7 +55,7 @@ You will need to use a bash terminal like OSX Terminal or WSL on Windows 10. Thi
 
 ### Usage
 
-Run this in your bash terminal:
+After setup is done, run this in your bash terminal:
 
 ```
 npm run bloggerconvert <filename>
