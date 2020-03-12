@@ -11,11 +11,12 @@
     "mkdirp": "0.5.x",
     "rimraf": "2.6.x",
     "single-line-log": "1.1.x",
-    "xml2json": "0.11.x"
+    "xml2json": "0.12.x"
   },
   "devDependencies": {},
   "scripts": {
-    "bloggerconvert": "./index.js"
+    "bloggerconvert": "./index.js",
+    "test": "./index.js ./test-data/test-blog-with-simple-default-theme.xml"
   },
   "author": "Ben Buchanan",
   "license": "MIT"
