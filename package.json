@@ -16,7 +16,7 @@
   "devDependencies": {},
   "scripts": {
     "bloggerconvert": "./index.js",
-    "test": "./index.js ./test-data/test-blog-with-simple-default-theme.xml"
+    "test": "npm run bloggerconvert ./test-data/test-blog-with-simple-default-theme.xml"
   },
   "author": "Ben Buchanan",
   "license": "MIT"
