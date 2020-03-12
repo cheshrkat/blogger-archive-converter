@@ -24,11 +24,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Give index.js permission to run
-      run: chmod +x ./index.js
-    - name: Install
     - run: npm ci
-    - name: Run tests
+    - run: chmod +x ./index.js
     - run: npm test
       env:
         CI: true
