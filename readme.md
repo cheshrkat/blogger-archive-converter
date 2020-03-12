@@ -1,5 +1,7 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/cheshrkat/blogger-archive-converter/badge.svg?targetFile=package.json)](https://snyk.io/test/github/cheshrkat/blogger-archive-converter?targetFile=package.json)
 
+![Node.js CI](https://github.com/cheshrkat/blogger-archive-converter/workflows/Node.js%20CI/badge.svg)
+
 # Blogger Archive Converter
 
 Processes Blogger archive XML files into HTML, Markdown and JSON files. Meaning you can convert...
