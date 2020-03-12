@@ -49,6 +49,8 @@ You will need to use a bash terminal like OSX Terminal or WSL on Windows 10. Thi
 
 Log in to Blogger, then go to Settings - Other, then choose Back Up Content to download the XML file. You can also use Google Takeout to export your Blog in ATOM format. This tool should be able to read both, although it has mostly been tested with content exported from the Blogger web UI (not Takeout).
 
+Note that `/input/` is gitignored, so if you want to ensure your data is not accidentally committed to git create that directory and put them in there.
+
 ### Setup
 
 1. Clone or download this repo
