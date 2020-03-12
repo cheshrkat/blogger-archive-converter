@@ -1,6 +1,4 @@
-[![Known Vulnerabilities](https://snyk.io/test/github/cheshrkat/blogger-archive-converter/badge.svg?targetFile=package.json)](https://snyk.io/test/github/cheshrkat/blogger-archive-converter?targetFile=package.json)
-
-![Node.js CI](https://github.com/cheshrkat/blogger-archive-converter/workflows/Node.js%20CI/badge.svg)
+![Smoke test](https://github.com/cheshrkat/blogger-archive-converter/workflows/Smoke%20test/badge.svg) [![Known Vulnerabilities](https://snyk.io/test/github/cheshrkat/blogger-archive-converter/badge.svg?targetFile=package.json)](https://snyk.io/test/github/cheshrkat/blogger-archive-converter?targetFile=package.json)
 
 # Blogger Archive Converter
 
