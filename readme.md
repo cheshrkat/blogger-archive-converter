@@ -71,9 +71,9 @@ npm run bloggerconvert <filename>
 
 To change configuration, edit `config.json`. Options:
 
-* *structure*: tree (default) | flat
-** flat: blog posts are all generated in one directory
-** tree: blog posts are generated in a `YYYY/MM/DD` directory tree
+* *structure*: `tree` (default) | `flat`
+  * flat: blog posts are all generated in one directory
+  * tree: blog posts are generated in a `YYYY/MM/DD` directory tree
 * *imagePath*: the path to images in your final blog, used in the `src` attribute of `img` elements.
 * *imageUrls*: array of substrings, if an `img src` contains matches any of the substrings it will be downloaded. 
 * *imageExclusionUrls*: array of substrings, if any match that image will be excluded from download.
