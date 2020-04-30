@@ -11,13 +11,17 @@
     "mkdirp": "1.0.0",
     "rimraf": "2.6.x",
     "single-line-log": "1.1.x",
-    "xml2json": "0.12.x"
+    "xml2json": "0.12.x",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {},
   "scripts": {
     "bloggerconvert": "./index.js",
-    "test": "npm run bloggerconvert ./test-data/test-blog-with-simple-default-theme.xml"
+    "test": "npm run bloggerconvert ./test-data/test-blog-with-simple-default-theme.xml",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "Ben Buchanan",
-  "license": "MIT"
+  "license": "MIT",
+  "snyk": true
 }
