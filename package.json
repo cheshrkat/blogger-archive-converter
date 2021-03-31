@@ -12,7 +12,7 @@
     "rimraf": "2.6.x",
     "single-line-log": "1.1.x",
     "xml2json": "0.12.x",
-    "snyk": "^1.465.0"
+    "snyk": "^1.518.0"
   },
   "devDependencies": {},
   "scripts": {
