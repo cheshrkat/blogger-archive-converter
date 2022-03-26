@@ -7,7 +7,7 @@
     "cheerio": "1.0.0-rc.3",
     "commander": "2.13.x",
     "count-files": "2.6.x",
-    "minimist": "1.2.3",
+    "minimist": "1.2.6",
     "mkdirp": "1.0.0",
     "rimraf": "2.6.x",
     "single-line-log": "1.1.x",
