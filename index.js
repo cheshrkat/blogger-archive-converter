@@ -605,9 +605,9 @@ function processData() {
       log.message(`Downloaded ${index}/${downloadCount}: ${fileName}`);      
     }
 
-    fs.copyFileSync(tempDestination, destination, (err) => {
+    fs.copyFileSync(tempDestination, destination /*, (err) => {
       if (err) throw err;
-    });
+    }*/);
     log.message(`${downloadCount}/${imagesToDownload.length}: copied ${fileName} from download cache`);
 
     downloadCount++;
