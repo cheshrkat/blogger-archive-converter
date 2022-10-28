@@ -598,7 +598,7 @@ function processData() {
       // this doesn't follow redirects as many image redirects do things you don't want 
       // (eg. downloading a bunch of bandwidth or hotlink error images)
       // in some cases setting curl -L may work better.
-      execSync(`curl --silent ${source} > ${tempDestination}`, function(err, stdout, stderr) {
+      execSync(`curl --silent ${source} --output "${tempDestination}"`, function(err, stdout, stderr) {
        if (err) { console.log(err) }
        if (stderr) { console.log(stderr) }
       });
