@@ -26,6 +26,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: chmod +x ./index.js
+    - run: chmod +x ./smoke-test.js
     - run: npm test
       env:
         CI: true
