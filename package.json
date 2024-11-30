@@ -4,15 +4,15 @@
   "description": "Convert Blogger XML backup to HTML, Markdown and JSON files.",
   "main": "index.js",
   "dependencies": {
-    "cheerio": "1.0.0-rc.12",
-    "commander": "2.13.x",
+    "cheerio": "1.0.0",
+    "commander": "12.1.0",
     "count-files": "2.6.x",
-    "minimist": "1.2.6",
-    "mkdirp": "1.0.0",
-    "rimraf": "2.6.x",
+    "minimist": "1.2.8",
+    "mkdirp": "3.0.1",
+    "rimraf": "6.0.1",
     "single-line-log": "1.1.x",
     "xml2json": "0.12.x",
-    "snyk": "^1.996.0"
+    "snyk": "1.x"
   },
   "devDependencies": {},
   "scripts": {

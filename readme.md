@@ -59,6 +59,8 @@ Note that `/input/` is gitignored, so if you want to ensure your data is not acc
     1. Otherwise check the `.nvmrc` file in this repo and [install that version](https://nodejs.org/en/download/)
 3. Run `npm install` from the root of the repo
 
+You can check everything is working by running the smoke tests: `npm test`
+
 ### Usage
 
 After setup is done, run this in your bash terminal:
