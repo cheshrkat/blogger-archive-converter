@@ -13,7 +13,7 @@
   "imageExclusionUrls": ["amazon"],
 
   "//imageUrls": "URL substrings to match against/download images from.",
-	"imageUrls": ["blogspot", "flickr"],
+	"imageUrls": ["blogspot", "flickr", "blogger.googleusercontent.com"],
 
   "//imageRelativeUrl": "http://your.image.domain/",
   "imageRelativeUrl": "https://weblog-files.200ok.com.au/"
