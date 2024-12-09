@@ -13,7 +13,18 @@ to change is in config.json and _templates.js
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const rimraf = require('rimraf');
-const parser = require('xml2json');
+const { XMLParser } = require('fast-xml-parser');
+
+const xmlParserOptions = {
+  ignoreAttributes: false,
+  attributeNamePrefix: '',
+  textNodeName: '$t',
+  // Ensure commonly repeated nodes are returned as arrays
+  isArray: (name) => {
+    return ['entry', 'category', 'link', 'gd:extendedProperty', 'sitemap'].includes(name);
+  }
+};
+const parser = new XMLParser(xmlParserOptions);
 const countFiles = require('count-files');
 const cheerio = require('cheerio');
 const exec = require('child_process').exec;
@@ -420,10 +431,9 @@ log.message('Blogger conversion started.');
 fs.readFile(sourceFile, prepData);
 function prepData (err, data) {
   if(err) { return console.log(err); }
-  // Create raw JSON with xml2json
-  json = parser.toJson(data);
-  // Create tidy JSON to work with
-  parsed = JSON.parse(json);
+  // Create raw JSON (string) and parsed object using fast-xml-parser
+  parsed = parser.parse(data.toString('utf8'));
+  json = JSON.stringify(parsed);
   log.message(`Data prepped from ${sourceFile}`);
   loadOptions();
 }

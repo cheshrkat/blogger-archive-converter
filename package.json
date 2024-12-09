@@ -7,22 +7,17 @@
     "cheerio": "1.0.0",
     "commander": "12.1.0",
     "count-files": "2.6.x",
+    "fast-xml-parser": "5.x",
     "minimist": "1.2.8",
     "mkdirp": "3.0.1",
     "rimraf": "6.0.1",
-    "single-line-log": "1.1.x",
-    "xml2json": "0.12.x",
-    "snyk": "1.x"
+    "single-line-log": "1.1.x"
   },
-  "devDependencies": {},
   "scripts": {
-    "bloggerconvert": "./index.js",
-    "pretest": "npm run bloggerconvert ./test-data/test-blog-with-simple-default-theme.xml",
-    "test": "./smoke-test.js",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "bloggerconvert": "node index.js",
+    "pretest": "npm run bloggerconvert -- ./test-data/test-blog-with-simple-default-theme.xml",
+    "test": "node smoke-test.js"
   },
   "author": "Ben Buchanan",
-  "license": "MIT",
-  "snyk": true
+  "license": "MIT"
 }

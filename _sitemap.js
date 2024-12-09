@@ -1,7 +1,17 @@
 const execSync = require('child_process').execSync;
 const fs = require('fs');
 const log = require('./_logging.js');
-const parser = require('xml2json');
+const { XMLParser } = require('fast-xml-parser');
+
+const xmlParserOptions = {
+  ignoreAttributes: false,
+  attributeNamePrefix: '',
+  textNodeName: '$t',
+  isArray: (name) => {
+    return ['sitemap', 'url'].includes(name);
+  }
+};
+const parser = new XMLParser(xmlParserOptions);
 
 module.exports = {
 
@@ -19,7 +29,7 @@ module.exports = {
     });
 
     const siteMapXML = siteMapData.toString("utf8");
-    const siteMapJSON = JSON.parse(parser.toJson(siteMapData));
+    const siteMapJSON = parser.parse(siteMapXML);
 
     fs.writeFileSync(`${siteMapDir}/sitemap.xml`, siteMapXML);
     log.message(`File written: ${siteMapDir}/sitemap.xml`);  

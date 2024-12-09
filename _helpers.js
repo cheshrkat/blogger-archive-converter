@@ -25,11 +25,22 @@ module.exports = {
 
   // Pull out the author data we actually want.
   tidyAuthor: function tidyAuthor(author) {
+    if (!author) return { name: '', url: '', email: '', avatar: '' };
+
+    const getText = (node) => {
+      if (typeof node === 'string') return node;
+      if (!node) return '';
+      if (typeof node === 'object' && ('$t' in node)) return node['$t'];
+      return '';
+    }
+
+    const avatar = (author['gd:image'] && (author['gd:image'].src || author['gd:image'].hasOwnProperty('src'))) ? author['gd:image'].src : (author['gd:image'] && author['gd:image']['@_src']) || '';
+
     return {
-      'name':     author.name,
-      'url':      author.uri,
-      'email':    author.email,
-      'avatar':     author['gd:image'].src
+      'name':  getText(author.name),
+      'url':   getText(author.uri),
+      'email': getText(author.email),
+      'avatar': avatar || ''
     };
   },
 
