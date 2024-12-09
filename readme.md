@@ -1,4 +1,4 @@
-![Smoke test](https://github.com/cheshrkat/blogger-archive-converter/workflows/Smoke%20test/badge.svg) [![Known Vulnerabilities](https://snyk.io/test/github/cheshrkat/blogger-archive-converter/badge.svg?targetFile=package.json)](https://snyk.io/test/github/cheshrkat/blogger-archive-converter?targetFile=package.json)
+![Smoke test](https://github.com/cheshrkat/blogger-archive-converter/workflows/Smoke%20test/badge.svg)
 
 # Blogger Archive Converter
 
@@ -58,8 +58,7 @@ Note that `/input/` is gitignored, so if you want to ensure your data is not acc
     1. If you have [NVM](https://github.com/creationix/nvm) just run `nvm install && nvm use` 
     1. Otherwise check the `.nvmrc` file in this repo and [install that version](https://nodejs.org/en/download/)
 3. Run `npm install` from the root of the repo
-
-You can check everything is working by running the smoke tests: `npm test`
+4. Run the smoke tests: `npm test` ...to confirm everything is working.
 
 ### Usage
 
