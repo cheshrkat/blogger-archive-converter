@@ -4,7 +4,7 @@
   "description": "Convert Blogger XML backup to HTML, Markdown and JSON files.",
   "main": "index.js",
   "dependencies": {
-    "cheerio": "1.0.0",
+    "cheerio": "1.1.0",
     "commander": "12.1.0",
     "count-files": "2.6.x",
     "minimist": "1.2.8",
