@@ -1,0 +1,287 @@
+[
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_PUBLISHING_MODE",
+    "value": "PUBLISH_MODE_BLOGSPOT",
+    "description": "The type of publishing done for this blog."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_ADMIN_PERMISSION",
+    "value": "heretic@gmail.com",
+    "description": "The list of administrators' emails for the blog."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_ADULT_CONTENT",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether this blog contains adult content"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_ALTERNATE_JSRENDER_ALLOWED",
+    "value": true,
+    "description": "Whether alternative JS renderings are allowed"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_ANALYTICS_ACCOUNT_NUMBER",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Blog's Google Analytics account number"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_ARCHIVE_DATE_FORMAT",
+    "value": 9,
+    "description": "The number of the archive index date format"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_ARCHIVE_FREQUENCY",
+    "value": "MONTHLY",
+    "description": "How frequently this blog should be archived"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_AUTHOR_PERMISSION",
+    "value": "Setting not defined in Blogger data.",
+    "description": "The list of authors' emails who have permission to publish."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_BACKLINKS_ALLOWED",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether to show comment backlinks on the blog"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_BY_POST_ARCHIVING",
+    "value": true,
+    "description": "Whether to provide an archive page for each post"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_ACCESS",
+    "value": "BLOGGERS",
+    "description": "Who can comment"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_CAPTCHA",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether to require commenters to complete a Captcha"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_EMAIL",
+    "value": "heretic@200ok.com.au,heretic@gmail.com",
+    "description": "List of email addresses to which notifications of new comments are sent"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_FEED",
+    "value": "FULL",
+    "description": "The type of feed to provide for blog comments"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_FORM_LOCATION",
+    "value": "EMBEDDED_IFRAME",
+    "description": "Blog comment form location"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_MESSAGE",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Blog comment message"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_MODERATION",
+    "value": "DISABLED",
+    "description": "Whether to enable comment moderation"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_MODERATION_DELAY",
+    "value": 14,
+    "description": "Number of days after which new comments are subject to moderation"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_MODERATION_EMAIL",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Email address for receiving notifications of new comments that require moderation"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENT_PROFILE_IMAGES",
+    "value": true,
+    "description": "Whether to show profile images in comments"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENTS_ALLOWED",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether to show comments"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_COMMENTS_TIME_STAMP_FORMAT",
+    "value": 29,
+    "description": "Comment time stamp format number"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_CONVERT_LINE_BREAKS",
+    "value": true,
+    "description": "Whether to convert line breaks into <br /> tags in post editor"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_CUSTOM_ADS_TXT",
+    "value": "Setting not defined in Blogger data.",
+    "description": "The custom ads.txt content of the blog served to ads search engines."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_CUSTOM_ADS_TXT_ENABLED",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether this blog serves custom ads.txt content to ads search engines."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_CUSTOM_PAGE_NOT_FOUND",
+    "value": "Setting not defined in Blogger data.",
+    "description": "The content served when the requested post or page is not found."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_CUSTOM_ROBOTS_TXT",
+    "value": "Setting not defined in Blogger data.",
+    "description": "The custom robots.txt content of the blog served to search engines."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_CUSTOM_ROBOTS_TXT_ENABLED",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether this blog serves custom robots.txt content to search engines."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_DATE_FORMAT",
+    "value": 6,
+    "description": "The number of the date header format"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_DEFAULT_BACKLINKS_MODE",
+    "value": "DEFAULT_HAVE_BACKLINKS",
+    "description": "Default backlinks mode for posts"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_DEFAULT_COMMENTS_MODE",
+    "value": "DEFAULT_HAVE_COMMENTS",
+    "description": "Default comment mode for posts"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_DESCRIPTION",
+    "value": "Not a real blog.",
+    "description": "A description of the blog"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_EMAIL_POST_LINKS",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether to show a link for users to email posts"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_FEED_REDIRECT_URL",
+    "value": "Setting not defined in Blogger data.",
+    "description": "URL to redirect post feed requests to"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_FLOAT_ALIGNMENT",
+    "value": true,
+    "description": "Whether float alignment is enabled for the blog"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_LOCALE",
+    "value": "en_GB",
+    "description": "Language for this blog"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_MAX_NUM",
+    "value": 7,
+    "description": "Maximum number of things to show on the main page\""
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_MAX_UNIT",
+    "value": "POSTS",
+    "description": "Unit of things to show on the main page"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_META_DESCRIPTION",
+    "value": "Setting not defined in Blogger data.",
+    "description": "The meta description of the blog served to search engines."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_META_DESCRIPTION_ENABLED",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether this blog is served with meta descriptions."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_NAME",
+    "value": "test blog",
+    "description": "The name of the blog"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_PER_POST_FEED",
+    "value": "FULL",
+    "description": "The type of feed to provide for per-post comments"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_POST_FEED",
+    "value": "FULL",
+    "description": "The type of feed to provide for blog posts"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_POST_FEED_FOOTER",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Footer to append to the end of each entry in the post feed"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_POST_TEMPLATE",
+    "value": "Setting not defined in Blogger data.",
+    "description": "The template for blog posts"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_PROMOTED",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether this blog can be promoted on Blogger"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_QUICK_EDITING",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether Quick Editing is enabled"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_READ_ACCESS_MODE",
+    "value": "PUBLIC",
+    "description": "The access type for the readers of the blog."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_READER_PERMISSION",
+    "value": "Setting not defined in Blogger data.",
+    "description": "The list of emails for users who have permission to read the blog."
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_SEARCHABLE",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether this blog should be indexed by search engines"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_SEND_EMAIL",
+    "value": "heretic@200ok.com.au",
+    "description": "Comma-separated list of emails to send new blog posts to"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_SHOW_TITLE",
+    "value": true,
+    "description": "Whether to show the title field"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_SHOW_URL",
+    "value": "Setting not defined in Blogger data.",
+    "description": "Whether to show a related link box in the post composer"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_SUBDOMAIN",
+    "value": "200ok-weblog-test",
+    "description": "The BlogSpot subdomain under which to publish your blog"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_TIME_STAMP_FORMAT",
+    "value": 5,
+    "description": "The number of the time stamp format"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_TIME_ZONE",
+    "value": "Australia/Sydney",
+    "description": "The time zone for this blog"
+  },
+  {
+    "setting": "tag:blogger.com,1999:blog-8208713778176397612.settings.BLOG_USE_LIGHTBOX",
+    "value": true,
+    "description": "Whether to show images in the Lightbox when clicked"
+  }
+]

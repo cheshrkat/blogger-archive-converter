@@ -19,6 +19,10 @@ module.exports = {
     console.log(character.repeat(width));
   },
 
+  newline: function () {
+    console.log("\n");
+  },
+
   message: function (message) {
     console.log(message);
   },

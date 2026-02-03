@@ -14,7 +14,6 @@ const fs = require('fs');
 const mkdirp = require('mkdirp');
 const rimraf = require('rimraf');
 const { XMLParser } = require('fast-xml-parser');
-
 const xmlParserOptions = {
   ignoreAttributes: false,
   attributeNamePrefix: '',

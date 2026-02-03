@@ -1,0 +1,34 @@
+{
+  "blogTitle": "test blog",
+  "blogUrl": "http://200ok-weblog-test.blogspot.com/",
+  "blogID": "8208713778176397612",
+  "blogIDfull": "tag:blogger.com,1999:blog-8208713778176397612.archive",
+  "blogAuthor": {
+    "name": "200ok",
+    "url": "https://www.blogger.com/profile/03236705748240585685",
+    "email": "noreply@blogger.com",
+    "avatar": "//www.200ok.com.au/avatar.jpg"
+  },
+  "emailAddresses": {
+    "admins": "heretic@gmail.com",
+    "authors": "Setting not defined in Blogger data."
+  },
+  "allAuthors": [
+    {
+      "name": "200ok",
+      "url": "https://www.blogger.com/profile/03236705748240585685",
+      "email": "noreply@blogger.com",
+      "avatar": "//www.200ok.com.au/avatar.jpg"
+    }
+  ],
+  "contentTypes": {
+    "blogs": 7,
+    "blogdrafts": 2,
+    "templates": 1,
+    "pages": 2,
+    "pagedrafts": 0,
+    "settings": 57,
+    "comments": 6,
+    "unidentified": 0
+  }
+}
