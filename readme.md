@@ -209,8 +209,8 @@ But don't be waiting for it to happen, if you need them right away DIY or submit
 
 ### 2.0.0 - 2026.02.04
 
-Swapped out the abandoned `xml2json` for `fast-xml-parser`. This creates a small but breaking change where numbers and boolean values are no longer quoted, which primarily impacts the raw output file and blog settings file.
+Swapped out the abandoned `xml2json` for `fast-xml-parser`. This creates a small but breaking change where some numbers and boolean values are no longer quoted, which is only known to impact the raw output file and blog settings file.
 
 ### 0.1.0 - 1.0.0
 
-The original version up until 2.0.0 (4a77b5d1762bb35509bf899d46fde06f7e6ca3df) which used `xml2json`.
+The original version up until 2.0.0 which used `xml2json`. If you happen to need this old version, you can get it [via the 1.0.0 tag](https://github.com/cheshrkat/blogger-archive-converter/releases/tag/v1.0.0).
