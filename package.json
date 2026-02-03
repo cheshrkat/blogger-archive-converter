@@ -1,16 +1,18 @@
 {
   "name": "blogger-archive-converter",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "Convert Blogger XML backup to HTML, Markdown and JSON files.",
   "main": "index.js",
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
-    "cheerio": "1.0.0",
-    "commander": "12.1.0",
+    "cheerio": "1.x",
     "count-files": "2.6.x",
     "fast-xml-parser": "5.x",
     "minimist": "1.2.8",
-    "mkdirp": "3.0.1",
-    "rimraf": "6.0.1",
+    "mkdirp": "3.x",
+    "rimraf": "6.x",
     "single-line-log": "1.1.x"
   },
   "scripts": {
