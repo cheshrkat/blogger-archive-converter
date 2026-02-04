@@ -35,11 +35,14 @@ Likely uses for each format:
 * JSON is a common format and easier to work with than Blogger's XML
 * HTML is provided more to inspect the conversion than anything else, although it does create a quite clean archive. If you want HTML fragments, edit the templates to remove what you don't need.
 
-If you aren't migrating to a new tool and just want to store a static HTML copy of your site _as it was published_, I'd suggest you download a copy with wget instead:
+### If you just want a flat HTML copy, just use wget
+
+If you aren't migrating to a new tool, never plan to edit the site again, and just want to store a static HTML copy of your site _as it was published_... I'd suggest you try downloading a copy with wget first:
 
 ```
 wget --limit-rate=200k --no-clobber --convert-links --random-wait -r -p -E -e robots=off -U mozilla http://www.example.com
-``` 
+```
+(Replacing `http://www.example.com` with your own website)
 
 ## Instructions
 
@@ -214,3 +217,4 @@ Swapped out the abandoned `xml2json` for `fast-xml-parser`. This creates a small
 ### 0.1.0 - 1.0.0
 
 The original version up until 2.0.0 which used `xml2json`. If you happen to need this old version, you can get it [via the 1.0.0 tag](https://github.com/cheshrkat/blogger-archive-converter/releases/tag/v1.0.0).
+
