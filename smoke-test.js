@@ -65,6 +65,14 @@ snapshotFiles.forEach((file, i) => {
         pass++;
     } else {
         log.error(`FAIL - file does not exist: ${thisFile}`);
+        const outputDir = thisFile.substring(0, thisFile.lastIndexOf('/'));
+        log.message(`Listing files in output directory: ${outputDir}`);
+        if (fs.existsSync(outputDir)) {
+            const files = fs.readdirSync(outputDir);
+            files.forEach((f) => {
+                log.message(` - ${f}`);
+            });
+        }
         fail++;
     }
 
@@ -82,18 +90,8 @@ snapshotFiles.forEach((file, i) => {
 
             const outputStats = fs.statSync(thisFile);
             const snapshotStats = fs.statSync(thisFilesSnapshot);
-            log.message(`Output file size: ${outputStats.size} bytes`);
+            log.message(`Output file size:   ${outputStats.size} bytes`);
             log.message(`Snapshot file size: ${snapshotStats.size} bytes`);
-
-            const outputDir = thisFile.substring(0, thisFile.lastIndexOf('/'));
-            log.message(`Listing files in output directory: ${outputDir}`);
-            if (fs.existsSync(outputDir)) {
-                const files = fs.readdirSync(outputDir);
-                files.forEach((f) => {
-                    log.message(` - ${f}`);
-                });
-            }
-
         }
     } else {
         log.error(`Snapshot DOES NOT exist for: ${thisFile}`);
