@@ -72,12 +72,28 @@ snapshotFiles.forEach((file, i) => {
     if (fs.existsSync(thisFilesSnapshot)) {
         const outputData = fs.readFileSync(thisFile, 'utf8');
         const snapshotData = fs.readFileSync(thisFilesSnapshot, 'utf8');
+
         if (outputData === snapshotData) {
             log.success(`matches snapshot: ${thisFile}`);
             pass++;
         } else {
             log.error(`FAIL - output file ${thisFile} does NOT match snapshot ${thisFilesSnapshot}`);
             fail++;
+
+            const outputStats = fs.statSync(thisFile);
+            const snapshotStats = fs.statSync(thisFilesSnapshot);
+            log.message(`Output file size: ${outputStats.size} bytes`);
+            log.message(`Snapshot file size: ${snapshotStats.size} bytes`);
+
+            const outputDir = thisFile.substring(0, thisFile.lastIndexOf('/'));
+            log.message(`Listing files in output directory: ${outputDir}`);
+            if (fs.existsSync(outputDir)) {
+                const files = fs.readdirSync(outputDir);
+                files.forEach((f) => {
+                    log.message(` - ${f}`);
+                });
+            }
+
         }
     } else {
         log.error(`Snapshot DOES NOT exist for: ${thisFile}`);
