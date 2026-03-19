@@ -105,7 +105,7 @@ snapshotFiles.forEach((file, i) => {
         // const snapshotData = fs.readFileSync(thisFilesSnapshot, 'utf8');
         const outputStats = fs.statSync(thisFile);
         const snapshotStats = fs.statSync(thisFilesSnapshot);
-        const tolerancePercentage = 10; // Allow a % difference in file size
+        const tolerancePercentage = 5; // Allow a % difference in file size
 
         if (areWithinTolerance(outputStats.size, snapshotStats.size, tolerancePercentage)) {
             log.success(`matches snapshot: ${thisFile}`);
