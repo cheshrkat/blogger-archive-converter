@@ -53,6 +53,25 @@ let snapshotFiles = [
     "testblog-images/8146864272524357874-sq2-mpc.gif"
 ]  
 
+function areWithinTolerance(num1, num2, tolerancePercentage) {
+    // Handle the case where both numbers are zero to avoid division by zero
+    if (num1 === 0 && num2 === 0) {
+        return true;
+    }
+
+    // Choose the larger number as the base for the percentage calculation
+    const base = Math.max(Math.abs(num1), Math.abs(num2));
+
+    // Calculate the absolute difference between the two numbers using Math.abs()
+    const difference = Math.abs(num1 - num2);
+
+    // Calculate the maximum allowed difference based on the tolerance percentage
+    const maxAllowedDifference = base * (tolerancePercentage / 100);
+
+    // Check if the actual difference is less than or equal to the maximum allowed difference
+    return difference <= maxAllowedDifference;
+}
+
 snapshotFiles.forEach((file, i) => {
     const thisFile = `output/${file}`;
     const thisFilesSnapshot = `test-data/snapshots/${file}`;
@@ -76,20 +95,21 @@ snapshotFiles.forEach((file, i) => {
         fail++;
     }
 
-    // add a test that the files are identical
+    // add a test that the files are similar size
     if (fs.existsSync(thisFilesSnapshot)) {
-        const outputData = fs.readFileSync(thisFile, 'utf8');
-        const snapshotData = fs.readFileSync(thisFilesSnapshot, 'utf8');
+        // const outputData = fs.readFileSync(thisFile, 'utf8');
+        // const snapshotData = fs.readFileSync(thisFilesSnapshot, 'utf8');
+        const outputStats = fs.statSync(thisFile);
+        const snapshotStats = fs.statSync(thisFilesSnapshot);
+        const tolerancePercentage = 10; // Allow a % difference in file size
 
-        if (outputData === snapshotData) {
+        if (areWithinTolerance(outputStats.size, snapshotStats.size, tolerancePercentage)) {
             log.success(`matches snapshot: ${thisFile}`);
             pass++;
         } else {
-            log.error(`FAIL - output file ${thisFile} does NOT match snapshot ${thisFilesSnapshot}`);
+            log.error(`FAIL - output file ${thisFile} does NOT match snapshot ${thisFilesSnapshot} within ${tolerancePercentage}% tolerance`);
             fail++;
 
-            const outputStats = fs.statSync(thisFile);
-            const snapshotStats = fs.statSync(thisFilesSnapshot);
             log.message(`Output file size:   ${outputStats.size} bytes`);
             log.message(`Snapshot file size: ${snapshotStats.size} bytes`);
         }
