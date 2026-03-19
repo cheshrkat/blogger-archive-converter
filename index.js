@@ -18,6 +18,11 @@ const xmlParserOptions = {
   ignoreAttributes: false,
   attributeNamePrefix: '',
   textNodeName: '$t',
+  // https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/docs/v4%2C%20v5/5.Entities.md
+  processEntities: {
+    maxEntitySize: 10000,
+    maxTotalExpansions: 10000,
+  },
   // Ensure commonly repeated nodes are returned as arrays
   isArray: (name) => {
     return ['entry', 'category', 'link', 'gd:extendedProperty', 'sitemap'].includes(name);
