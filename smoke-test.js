@@ -106,16 +106,18 @@ snapshotFiles.forEach((file, i) => {
         const outputStats = fs.statSync(thisFile);
         const snapshotStats = fs.statSync(thisFilesSnapshot);
         const tolerancePercentage = 5; // Allow a % difference in file size
+        const outputFileSize = outputStats.size;
+        const snapshotFileSize = snapshotStats.size;
 
-        if (areWithinTolerance(outputStats.size, snapshotStats.size, tolerancePercentage)) {
+        if (areWithinTolerance(outputFileSize, snapshotFileSize, tolerancePercentage)) {
             log.success(`matches snapshot: ${thisFile}`);
             pass++;
         } else {
             log.error(`FAIL - output file ${thisFile} does NOT match snapshot ${thisFilesSnapshot} within ${tolerancePercentage}% tolerance`);
             fail++;
 
-            log.message(`Output file size:   ${outputStats.size} bytes`);
-            log.message(`Snapshot file size: ${snapshotStats.size} bytes`);
+            log.message(`Output file size:   ${outputFileSize} bytes`);
+            log.message(`Snapshot file size: ${snapshotFileSize} bytes`);
         }
     } else {
         log.error(`Snapshot DOES NOT exist for: ${thisFile}`);
