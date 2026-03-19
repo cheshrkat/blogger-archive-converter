@@ -65,6 +65,8 @@ function areWithinTolerance(num1, num2, tolerancePercentage) {
     // Calculate the absolute difference between the two numbers using Math.abs()
     const difference = Math.abs(num1 - num2);
 
+    log.message(`Comparing ${num1} and ${num2} with a tolerance of ${tolerancePercentage}% (absolute difference: ${difference})`);
+
     // Calculate the maximum allowed difference based on the tolerance percentage
     const maxAllowedDifference = base * (tolerancePercentage / 100);
 
