@@ -68,8 +68,8 @@ function areWithinTolerance(num1, num2, tolerancePercentage) {
     // Calculate the maximum allowed difference based on the tolerance percentage
     const maxAllowedDifference = base * (tolerancePercentage / 100);
 
-    if(num1 != num2) {
-        log.message(`Comparing ${num1} and ${num2} with a tolerance of ${tolerancePercentage}% (absolute difference: ${difference})`);
+    if(difference != 0) {
+        log.warning(`Comparing ${num1} and ${num2} with a tolerance of ${tolerancePercentage}% (absolute difference: ${difference})`);
     }
 
     // Check if the actual difference is less than or equal to the maximum allowed difference
