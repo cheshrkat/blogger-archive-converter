@@ -11,8 +11,10 @@ to change is in config.json and _templates.js
 */
 
 const fs = require('fs');
+const path = require('path');
 const mkdirp = require('mkdirp');
 const rimraf = require('rimraf');
+const minimist = require('minimist');
 const { XMLParser } = require('fast-xml-parser');
 const xmlParserOptions = {
   ignoreAttributes: false,
@@ -20,8 +22,8 @@ const xmlParserOptions = {
   textNodeName: '$t',
   // https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/docs/v4%2C%20v5/5.Entities.md
   processEntities: {
-    maxEntitySize: 10000,
-    maxTotalExpansions: 10000,
+    maxEntitySize: 1000000,
+    maxTotalExpansions: 1000000,
   },
   // Ensure commonly repeated nodes are returned as arrays
   isArray: (name) => {
@@ -31,15 +33,20 @@ const xmlParserOptions = {
 const parser = new XMLParser(xmlParserOptions);
 const countFiles = require('count-files');
 const cheerio = require('cheerio');
-const exec = require('child_process').exec;
-const execSync = require('child_process').execSync;
+const execFileSync = require('child_process').execFileSync;
 
-const sourceFile = process.argv[2];
+const cliArgs = minimist(process.argv.slice(2));
+const sourceFile = cliArgs._[0];
+const outputBase = path.resolve(cliArgs.output || path.join(__dirname, 'output'));
 const configFile = './config.json';
 const templates = require('./_templates.js');
 const log = require('./_logging.js');
 const helpers = require('./_helpers.js');
 const sitemaps = require('./_sitemap.js');
+
+const sourceFileFormat = sourceFile.split('.').pop().toLowerCase();
+const atomMode = (sourceFileFormat === 'atom') ? true : false;
+const xmlMode = (sourceFileFormat === 'xml') ? true : false;
 
 var options;
 var json;
@@ -63,6 +70,7 @@ var imageExcluded = [];
 var imageSkipped = [];
 var imagesProcessed = 0;
 var dataImages = 0;
+var imageDownloadPause = 5000;
 
 var blogDetails = {
   'blogTitle': 'ERROR: title not parsed',
@@ -120,7 +128,7 @@ function processTemplate(item, index) {
   // Index guards against edge case of a blog having more 
   // than one template. Don't think it actually happens.
   var templateFile = `${dirs.data}/template-${index}.xml`;
-  fs.writeFileSync(templateFile, item.content["$t"]);
+  fs.writeFileSync(templateFile, item.content["$t"] || item.content);
   log.message(`Template saved: ${templateFile}`); 
   blogDetails.contentTypes.templates++;
 }
@@ -198,18 +206,90 @@ function processPostBody(postBody, postId, blogDetails) {
   return $('body').html();
 }
 
+function isValidImageFile(filePath, contentType = '') {
+  if (!fs.existsSync(filePath)) return false;
+
+  const file = fs.openSync(filePath, 'r');
+  const data = Buffer.alloc(512);
+  let bytesRead;
+  try {
+    bytesRead = fs.readSync(file, data, 0, data.length, 0);
+  } finally {
+    fs.closeSync(file);
+  }
+  if (bytesRead === 0) return false;
+  const headerData = data.subarray(0, bytesRead);
+
+  const isKnownImage =
+    (headerData[0] === 0xff && headerData[1] === 0xd8 && headerData[2] === 0xff) ||
+    headerData.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) ||
+    ['GIF87a', 'GIF89a'].includes(headerData.subarray(0, 6).toString()) ||
+    (headerData.subarray(0, 4).toString() === 'RIFF' && headerData.subarray(8, 12).toString() === 'WEBP') ||
+    headerData.subarray(0, 2).toString() === 'BM' ||
+    ['II*\u0000', 'MM\u0000*'].includes(headerData.subarray(0, 4).toString()) ||
+    headerData.subarray(0, 4).equals(Buffer.from([0x00, 0x00, 0x01, 0x00])) ||
+    (headerData.subarray(4, 8).toString() === 'ftyp' && ['avif', 'avis'].includes(headerData.subarray(8, 12).toString()));
+  if (isKnownImage) return true;
+
+  const header = headerData.toString('utf8').trimStart();
+  if (/^(?:<svg\b|<\?xml\b[\s\S]*?<svg\b)/i.test(header)) return true;
+  if (/^image\//i.test(contentType)) return true;
+
+  // Unknown binary formats may still be valid images, but text error pages are not.
+  return headerData.some(byte => byte === 0 || byte < 9 || (byte > 13 && byte < 32));
+}
+
+function getRetryAfterDelay(headers) {
+  const responseBlocks = headers.split(/(?=HTTP\/\S+\s+\d{3})/i);
+  const responseBlock = responseBlocks.filter(block => /^HTTP\/\S+\s+\d{3}/i.test(block)).pop();
+  if (!responseBlock || !/^HTTP\/\S+\s+429\b/i.test(responseBlock)) return null;
+
+  const retryAfter = responseBlock.match(/^Retry-After:\s*(.+)\s*$/im);
+  if (!retryAfter) return null;
+
+  const value = retryAfter[1].trim();
+  if (/^\d+$/.test(value)) {
+    const seconds = Number(value);
+    return Number.isSafeInteger(seconds) && seconds <= Number.MAX_SAFE_INTEGER / 1000 ? seconds * 1000 : null;
+  }
+
+  const retryAt = Date.parse(value);
+  return Number.isNaN(retryAt) ? null : Math.max(0, retryAt - Date.now());
+}
+
+function waitFor(milliseconds) {
+  const waitArray = new Int32Array(new SharedArrayBuffer(4));
+  while (milliseconds > 0) {
+    const waitChunk = Math.min(milliseconds, 2147483647);
+    Atomics.wait(waitArray, 0, 0, waitChunk);
+    milliseconds -= waitChunk;
+  }
+}
+
+function isDraft(item) {
+  return helpers.isDraft(item) || (atomMode && item['blogger:status'] === 'DRAFT');
+}
+
+function tidyItemDate(date) {
+  const tidyDate = helpers.tidyDate(date);
+  if (atomMode && date.endsWith('Z')) {
+    tidyDate.tidyISO += 'Z';
+  }
+  return tidyDate;
+}
+
 // Just processes the data, doesn't write to files
 function processPostOrPageData(item) {
-  var draft = helpers.isDraft(item);
+  var draft = isDraft(item);
   var postId = helpers.getPostId(item.id);
   var author = helpers.tidyAuthor(item.author);
-  var publishedDate = helpers.tidyDate(item.published);
-  var updatedDate = helpers.tidyDate(item.updated);
+  var publishedDate = tidyItemDate(item.published);
+  var updatedDate = tidyItemDate(item.updated);
   var postStatus = 'draft';
   var postURL = 'none';
   var postFileName;
   var postLabels = [];
-  var postContent = item.content["$t"];
+  var postContent = item.content["$t"] || item.content;
   var postLinks = [];
   var postImages = [];
 
@@ -248,12 +328,12 @@ function processPostOrPageData(item) {
   // Add author to overall set
   blogDetails.allAuthors.push(author);
 
-  // Process post labels
-  if (JSON.stringify(item.category).includes('ns#')) {
+  // Process post labels from XML namespace categories or Atom Blogger categories.
+  if (item.category) {
     let len = item.category.length;
     for (var i=0; i < len; i++) {
       var category = item.category[i];
-      if (category.scheme.includes('ns#')) {
+      if (category.scheme && (category.scheme.includes('ns#') || category.scheme.startsWith('tag:blogger.com,1999:blog-')) && category.term) {
         postLabels.push(category.term);
         allLabels.push(category.term);
       }
@@ -264,14 +344,22 @@ function processPostOrPageData(item) {
     postFileName = `draft-${publishedDate.YYYYMMDD}-${postId}`;
   } else {
     postStatus = 'published';
-    postURL = helpers.findRelAlternate(item.link);
+    if (atomMode) {
+      const postPath = item['blogger:filename'];
+      if (typeof postPath !== 'string' || !postPath) {
+        throw new Error(`Published Atom entry ${postId} does not have a Blogger filename`);
+      }
+      postURL = new URL(postPath, blogDetails.blogUrl).toString();
+    } else {
+      postURL = helpers.findRelAlternate(item.link);
+    }
     postFileName = postURL.toString().split("/").pop().replace(/\.html/g, '');    
   }
 
   return {
     'id':           postId,
     'metadata': {
-      'title':      item.title["$t"],
+      'title':      item.title["$t"] || item.title,
       'author':     author,
       'url':        postURL,
       'filename':   postFileName,
@@ -289,7 +377,7 @@ function processPostOrPageData(item) {
 }
 
 function processPostOrPage(item, type) {
-  var draft = helpers.isDraft(item);
+  var draft = isDraft(item);
   var typeCount;
 
   if (type === 'post') {
@@ -313,24 +401,36 @@ function processPage(item) {
 }
 
 function processComment(item) {
-  // Both the comment id and the parent id are identified 
-  // with post-<id> at the end of the relevant string.
-  // Not clear were PID is used but it seems unique as well.
-  var comment = {
-    'pid':          item['gd:extendedProperty'][0].value.slice(4),
-    'id':           helpers.getPostId(item.id),
-    'parentItem':   helpers.getPostId(item['thr:in-reply-to'].ref),
-    'author':       helpers.tidyAuthor(item.author),
-    'published':    helpers.tidyDate(item.published),
-    'updated':      helpers.tidyDate(item.updated),
-    'content':      item.content['$t']
+
+  let comment;
+  if(atomMode) {
+    comment = {
+      // No PID in atom
+      'id': helpers.getPostId(item.id),
+      'parentItem': helpers.getPostId(item['blogger:parent']),
+      'author': helpers.tidyAuthor(item.author),
+      'published': tidyItemDate(item.published),
+      'updated': tidyItemDate(item.updated),
+      'content': item.content['$t'] || item.content
+    }
+  } else if (xmlMode) {
+    // Both the comment id and the parent id are identified 
+    // with post-<id> at the end of the relevant string.
+    // Not clear were PID is used but it seems unique as well.
+    comment = {
+      'pid': item['gd:extendedProperty'][0].value.slice(4),
+      'id': helpers.getPostId(item.id),
+      'parentItem': helpers.getPostId(item['thr:in-reply-to'].ref),
+      'author': helpers.tidyAuthor(item.author),
+      'published': tidyItemDate(item.published),
+      'updated': tidyItemDate(item.updated),
+      'content': item.content['$t'] || item.content
+    }
+  } else {
+    throw new Error(`Cannot process comment from unknown source format: ${sourceFileFormat}`);
   }
 
-  // Add each comment to the relevant blog post in the main data.
-  // The original data seems to be chronological so we don't need to sort 
-  blogPosts[blogPosts.findIndex(x => x.id === comment.parentItem)].comments.push(comment);
-
-  // Add to the separate commenter and comment data
+  // The Atom export may list comments before their parent posts.
   allCommenters.push(helpers.tidyAuthor(item.author));
   allComments.push(comment);
 
@@ -340,8 +440,8 @@ function processComment(item) {
 function processSetting(item) {
   setting = {
     'setting': item.id,
-    'value': item.content['$t'] || 'Setting not defined in Blogger data.',
-    'description': item.title['$t']
+    'value': item.content['$t'] || item.content || 'Setting not defined in Blogger data.',
+    'description': item.title['$t'] || item.title
   };
 
   blogSettings.push(setting);
@@ -459,12 +559,21 @@ function prepOptions(err, data) {
 function processData() {
   var bloggerTag = 'tag:blogger.com,1999';
 
+  if(atomMode) {
+    log.warning(`Atom files do not contain the blog URL, so it must be provided in config.json. If you don't override the default value, your export won't work.`);
+    blogDetails.blogUrl = options.blogUrl;
+  } else if (xmlMode) {
+    blogDetails.blogUrl = helpers.findRelAlternate(parsed.feed.link);
+  } else {
+    log.error(`Unknown source file format: ${sourcefileFormat}. Must be .atom or .xml`);
+    process.exit(4);
+  }
+
   // Top level data items
   blogDetails.blogIDfull = parsed.feed.id;
   blogDetails.blogID = parsed.feed.id.match(/(?:blog-)(\d*)/)[1];
-  blogDetails.blogUrl = helpers.findRelAlternate(parsed.feed.link);
   blogDetails.blogAuthor = helpers.tidyAuthor(parsed.feed.author);
-  blogDetails.blogTitle = parsed.feed.title["$t"];
+  blogDetails.blogTitle = parsed.feed.title["$t"] || parsed.feed.title;
 
   if (!parsed.feed.id.includes(bloggerTag)) {
     log.error(`!!!!!!!!!!`);
@@ -476,7 +585,7 @@ function processData() {
   log.message(`Processing data for ${blogDetails.blogTitle}`);
 
   // Creates a subdirectory based on the blog's title.
-  outputDir = `${__dirname}/output/${blogDetails.blogTitle.replace(/\s+/g, '')}`
+  outputDir = path.join(outputBase, blogDetails.blogTitle.replace(/\s+/g, ''));
 
   // 10 is a dumb way to check we've got more than just '/output/' 
   // in the variable. Or some other disaster like an empty var
@@ -492,7 +601,7 @@ function processData() {
     'output':               outputDir,
     'data':                 `${outputDir}/data`,
     'images':               `${outputDir}/images`,
-    'images-temp':          `${__dirname}/output/${blogDetails.blogTitle.replace(/\s+/g, '')}-images`,
+    'images-temp':          path.join(outputBase, `${blogDetails.blogTitle.replace(/\s+/g, '')}-images`),
 
     'posts':                `${outputDir}/posts`,
     'posts-html':           `${outputDir}/posts/html`,
@@ -517,36 +626,48 @@ function processData() {
 
   // identify the type of entry and process accordingly
   entriesCount = Object.keys(parsed.feed.entry).length;
-  for (var i = 0; i < entriesCount; i++){
+  for (var i = 0; i < entriesCount; i++) {
     var item = parsed.feed.entry[i];
     switch (true) {
 
-      case helpers.categoryIncludes(item.category, "#comment"):
+      case (item['blogger:type'] === 'COMMENT') || helpers.categoryIncludes(item.category, "#comment"):
         processComment(item);
         break;
 
-      case helpers.categoryIncludes(item.category, "#post"):
+      case (item['blogger:type'] === 'POST') || helpers.categoryIncludes(item.category, "#post"):
         processPost(item);
         break;
 
-      case helpers.categoryIncludes(item.category, "#page"):
+      case (item['blogger:type'] === 'PAGE') || helpers.categoryIncludes(item.category, "#page"):
         processPage(item);
         break;
 
-      case helpers.categoryIncludes(item.category, "#settings"):
+      case (item['blogger:type'] === 'SETTINGS') || helpers.categoryIncludes(item.category, "#settings"):
         processSetting(item);
         break;
 
-      case helpers.categoryIncludes(item.category, "#template"):
+      case (item['blogger:type'] === 'TEMPLATE') || helpers.categoryIncludes(item.category, "#template"):
         processTemplate(item, i);
         break;
 
       default:
         blogDetails.contentTypes.unidentified++;
-        log.error(`Unidentified type: ${JSON.stringify(item,null,2)}`);
+        log.error(`Unidentified type: ${JSON.stringify(item, null, 2)}`);
     }
   }
 
+  // Attach comments after all posts have been collected, since Atom feeds can
+  // place comments before their parent posts.
+  allComments.sort((first, second) => {
+    return Date.parse(first.published.timestamp) - Date.parse(second.published.timestamp);
+  });
+  allComments.forEach((comment) => {
+    const parentPost = blogPosts.find(post => post.id === comment.parentItem);
+    if (!parentPost) {
+      throw new Error(`Could not find parent post ${comment.parentItem} for comment ${comment.id}`);
+    }
+    parentPost.comments.push(comment);
+  });
 
   // ------------------------------------------------------------
   // WRITING PHASE
@@ -573,7 +694,6 @@ function processData() {
   writeDataFile('blog-commenters.json',   allCommenters,  'Blog commenters');
   writeDataFile('blog-comments.json',     allComments,    'Blog comments');
   writeDataFile('blog-images.json',       allImages,      'Blog images');
-  writeDataFile('image-errors.json',      imageError,     'Unreachable images');
   writeDataFile('image-excluded.json',    imageExcluded,  'Excluded images');
   writeDataFile('image-skipped.json',     imageSkipped,   'Skipped images');
   writeDataFile('image-downloaded.json',  imagesToDownload, 'Downloaded images');
@@ -603,30 +723,98 @@ function processData() {
   imagesToDownload.forEach( function(element, index) {
 
     let source = element.source;
-    let tempDestination = `${dirs['images-temp']}/${element.destination}`;
-    let destination = `${dirs['images']}/${element.destination}`;
-    let fileName = destination.split('/').pop();
+    let tempDestination = path.join(dirs['images-temp'], element.destination);
+    let destination = path.join(dirs['images'], element.destination);
+    let fileName = path.basename(destination);
+    let downloadDestination = `${tempDestination}.download`;
+    let responseHeaders = `${downloadDestination}.headers`;
 
-    if (!fs.existsSync(tempDestination)) {
-      log.message(`Downloading ${index}/${downloadCount}: ${source}`);      
-      // this doesn't follow redirects as many image redirects do things you don't want 
-      // (eg. downloading a bunch of bandwidth or hotlink error images)
-      // in some cases setting curl -L may work better.
-      execSync(`curl --silent ${source} --output "${tempDestination}"`, function(err, stdout, stderr) {
-       if (err) { console.log(err) }
-       if (stderr) { console.log(stderr) }
-      });
-      log.message(`Downloaded ${index}/${downloadCount}: ${fileName}`);      
+    if (fs.existsSync(tempDestination) && !isValidImageFile(tempDestination)) {
+      log.warning(`Discarding invalid cached image: ${tempDestination}`);
+      fs.unlinkSync(tempDestination);
     }
 
-    fs.copyFileSync(tempDestination, destination /*, (err) => {
-      if (err) throw err;
-    }*/);
+    if (!fs.existsSync(tempDestination)) {
+      log.message(`Downloading ${index}/${downloadCount}: ${source}`);
+      try {
+        let retryCount = 0;
+        while (true) {
+          try {
+            if (imageDownloadPause > 0) {
+              log.message(`Waiting ${imageDownloadPause} ms before image download attempt.`);
+            }
+            waitFor(imageDownloadPause);
+
+            if (fs.existsSync(downloadDestination)) fs.unlinkSync(downloadDestination);
+            if (fs.existsSync(responseHeaders)) fs.unlinkSync(responseHeaders);
+
+            const response = execFileSync('curl', [
+              '--fail',
+              '--location',
+              '--silent',
+              '--show-error',
+              '--dump-header',
+              responseHeaders,
+              '--output',
+              downloadDestination,
+              '--write-out',
+              '%{http_code}\\n%{content_type}',
+              source
+            ], { encoding: 'utf8' });
+            const [statusCode, contentType] = response.trim().split(/\r?\n/);
+
+            if (!/^2\d\d$/.test(statusCode)) {
+              throw new Error(`Unexpected HTTP status ${statusCode || 'unknown'}`);
+            }
+            if (!isValidImageFile(downloadDestination, contentType)) {
+              throw new Error(`Response was not a valid image (content type: ${contentType || 'unknown'})`);
+            }
+
+            fs.renameSync(downloadDestination, tempDestination);
+            log.message(`Downloaded ${index}/${downloadCount}: ${fileName}`);
+            break;
+          } catch (error) {
+            const headers = fs.existsSync(responseHeaders) ? fs.readFileSync(responseHeaders, 'utf8') : '';
+            const retryAfterDelay = getRetryAfterDelay(headers);
+            if (retryAfterDelay !== null && retryCount === 0) {
+              log.warning(`Received HTTP 429 for ${source}; retrying after ${retryAfterDelay} ms as requested by Retry-After.`);
+              waitFor(retryAfterDelay);
+              retryCount++;
+              continue;
+            }
+            throw error;
+          }
+        }
+      } catch (error) {
+        if (fs.existsSync(downloadDestination)) {
+          fs.unlinkSync(downloadDestination);
+        }
+        if (fs.existsSync(responseHeaders)) {
+          fs.unlinkSync(responseHeaders);
+        }
+        const detail = error.stderr ? error.stderr.toString().trim() : error.message;
+        const message = `Image download failed: ${detail}`;
+        imageError.push({
+          'postId': element.destination.split('-')[0],
+          'imageUrl': source,
+          'error': message
+        });
+        log.error(`${message} (${source})`);
+        downloadCount++;
+        return;
+      }
+      if (fs.existsSync(responseHeaders)) {
+        fs.unlinkSync(responseHeaders);
+      }
+    }
+
+    fs.copyFileSync(tempDestination, destination);
     log.message(`${downloadCount}/${imagesToDownload.length}: copied ${fileName} from download cache`);
 
     downloadCount++;
 
   });
+  writeDataFile('image-errors.json', imageError, 'Unreachable images');
 
   // ------------------------------------------------------------
   // CHECKING PHASE
@@ -675,19 +863,19 @@ function processData() {
   log.message(`  ${imagesToDownload.length} of those identified as images that should be downloaded.`)
   log.message(`  ${dataImages} data URI images (preserved).`)
   if (imageSkipped.length > 0) {
-    log.warning(`  ${imageSkipped.length} images skipped, review images-skipped.json for details.`);
+    log.warning(`  ${imageSkipped.length} images skipped, review ${dirs.data}/images-skipped.json for details.`);
   } else {
     log.message(`  ${imageSkipped.length} images skipped.`);
   }
   log.message(`  ${imageExcluded.length} excluded from download.`)
   if (imageError.length > 0) {
-    log.error(`  ${imageError.length} unreachable images - you will need to download these manually and update links manually. Refer to image-errors.json for details. If you have not set your image fallback URL, this may help with some images.`);
+    log.error(`  ${imageError.length} unreachable images - you will need to download these manually and update links manually. Refer to ${dirs.data}/image-errors.json for details. It may help to try setting your image fallback URL if you have not done so.`);
   } else {
     log.message(`  ${imageError.length} unreachable images.`);    
   }
   log.warning(`  You should review the images to ensure they all downloaded successfully.`)
 
-  imagesProcessed = imagesToDownload.length + imageSkipped.length + imageExcluded.length + imageError.length + dataImages;
+  imagesProcessed = imagesToDownload.length + imageSkipped.length + imageExcluded.length + dataImages;
   if (allImages.length !== imagesProcessed) {
     log.error(`ERROR: ${allImages.length} found but ${imagesProcessed} were processed.`)
   } else {

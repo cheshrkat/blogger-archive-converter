@@ -16,6 +16,9 @@
 	"imageUrls": ["blogspot", "flickr", "blogger.googleusercontent.com"],
 
   "//imageRelativeUrl": "http://your.image.domain/",
-  "imageRelativeUrl": "https://weblog-files.200ok.com.au/"
+  "imageRelativeUrl": "https://weblog-files.200ok.com.au/",
+
+  "//blogUrl": "Must be provided manually for Atom files, as Blogger Atom files do not contain the blog URL. Replace this value with your own blog's URL.",
+  "blogUrl": "https://200ok-weblog-test.blogspot.com/"
 
 }

@@ -17,8 +17,11 @@
   },
   "scripts": {
     "bloggerconvert": "node index.js",
-    "pretest": "npm run bloggerconvert -- ./test-data/test-blog-with-simple-default-theme.xml",
-    "test": "node smoke-test.js"
+    "pretestxml": "npm run bloggerconvert -- ./test-data/test-blog-with-simple-default-theme.xml",
+    "testxml": "node smoke-test.js",
+    "pretestatom": "npm run bloggerconvert -- ./test-data/test-blog-with-simple-default-theme.atom --output ./output-atom --format atom",
+    "testatom": "node smoke-test.js ./output-atom",
+    "test": "npm run testxml && npm run testatom"
   },
   "author": "Ben Buchanan",
   "license": "MIT"

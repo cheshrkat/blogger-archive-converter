@@ -4,14 +4,15 @@ const log = require('./_logging.js');
 let pass = 0;
 let fail = 0;
 const outputDirectory = process.argv[2] || "output";
+const isCI = (process.env.CI === 'true') || false;
 
-// Check if CI=true is set in the environment variables
-const isCI = (process.env.CI === 'true') ? true : false;
 if (isCI) {
-    log.message(`Running in CI mode: output directory is '${outputDirectory}'`);
+    log.message(`Running in CI mode`);
 } else {
-    log.message(`Running in local mode: output directory is '${outputDirectory}'`);
+    log.message(`Running in local mode`);
 }
+
+log.message(`Output directory is '${outputDirectory}'`);
 
 // These files should exist in both output and snapshot directories
 let snapshotFiles = [
@@ -111,28 +112,28 @@ snapshotFiles.forEach((file, i) => {
     // add a test that the files are similar size
     // skip this test in CI as it's not reliable due to different OS and file system differences
     if (fs.existsSync(thisFilesSnapshot)) {
-        // const outputData = fs.readFileSync(thisFile, 'utf8');
-        // const snapshotData = fs.readFileSync(thisFilesSnapshot, 'utf8');
-        const outputStats = fs.statSync(thisFile);
-        const snapshotStats = fs.statSync(thisFilesSnapshot);
-        const tolerancePercentage = 5; // Allow a % difference in file size
-        const outputFileSize = outputStats.size;
-        const snapshotFileSize = snapshotStats.size;
+        if (fs.existsSync(thisFile)) {
+            const outputStats = fs.statSync(thisFile);
+            const snapshotStats = fs.statSync(thisFilesSnapshot);
+            const tolerancePercentage = 5; // Allow a % difference in file size
+            const outputFileSize = outputStats.size;
+            const snapshotFileSize = snapshotStats.size;
 
-        if (!isCI) {
-            if (areWithinTolerance(outputFileSize, snapshotFileSize, tolerancePercentage)) {
-                log.success(`matches snapshot: ${thisFile}`);
-                pass++;
+            if (!isCI) {
+                if (areWithinTolerance(outputFileSize, snapshotFileSize, tolerancePercentage)) {
+                    log.success(`matches snapshot: ${thisFile}`);
+                    pass++;
+                } else {
+                    log.error(`FAIL - output file ${thisFile} does NOT match snapshot ${thisFilesSnapshot} within ${tolerancePercentage}% tolerance`);
+                    fail++;
+                }
             } else {
-                log.error(`FAIL - output file ${thisFile} does NOT match snapshot ${thisFilesSnapshot} within ${tolerancePercentage}% tolerance`);
-                fail++;
+                log.warning(`Skipping file size comparison check for ${thisFile} in CI mode`);
+                pass++;
             }
-        } else {
-            log.warning(`Skipping file size comparison check for ${thisFile} in CI mode`);
-            pass++;
+            log.message(`Output file size:   ${outputFileSize} bytes`);
+            log.message(`Snapshot file size: ${snapshotFileSize} bytes`);
         }
-        log.message(`Output file size:   ${outputFileSize} bytes`);
-        log.message(`Snapshot file size: ${snapshotFileSize} bytes`);
         
     } else {
         log.error(`Snapshot DOES NOT exist for: ${thisFile}`);

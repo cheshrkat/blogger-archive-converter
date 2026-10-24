@@ -30,7 +30,7 @@ module.exports = {
 			<div class="comment" id="comment-${comment.id}">
 				<p class="comment-header">
 					<date datetime="${comment.published.timestamp}">${comment.published.tidyISO}</date> 
-					<a href="${comment.author.url}" rel="nofollow">${comment.author.name}</a>:
+					${comment.author.url ? `<a href="${comment.author.url}" rel="nofollow">${comment.author.name}</a>` : `<span>${comment.author.name}</span>`}:
 				</p>
 				<div class="comment-content"><p>${comment.content}</p></div>
 				<div class="comment-footer"></div>
